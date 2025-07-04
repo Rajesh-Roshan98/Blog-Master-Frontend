@@ -1,5 +1,6 @@
 {
   "name": "blog-management-frontend",
+  "homepage": "https://rajesh-roshan98.github.io/Blog-Master-Frontend/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
@@ -16,6 +19,7 @@
     "dom": "^0.0.3",
     "emoji-picker-react": "^4.12.2",
     "framer-motion": "^12.18.1",
+    "gh-pages": "^6.3.0",
     "lucide-react": "^0.516.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
