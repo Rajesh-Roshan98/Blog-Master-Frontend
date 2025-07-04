@@ -42,9 +42,8 @@ const ContactUs = () => {
     <div className="min-h-screen bg-gradient-to-r from-blue-50 to-white flex items-center justify-center px-4 relative">
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover z-0"
-        style={{
-          backgroundImage: `url('${telephoneImage}')`
-        }}
+        style={{ backgroundImage: `url(${telephoneImage})` }}
+
       ></div>
 
       <div className="relative bg-white/100 backdrop-blur-md shadow-2xl rounded-lg p-8 max-w-md w-full z-10">
