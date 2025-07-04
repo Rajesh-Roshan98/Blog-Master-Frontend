@@ -4,6 +4,8 @@ import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import telephoneImage from '../assets/top-view-blue-monday_ith-telephone.jpg';
+
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -40,7 +42,7 @@ const ContactUs = () => {
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover z-0"
         style={{
-          backgroundImage: `url('src/assets/top-view-blue-monday-concept-composition-with-telephone.jpg')`
+          backgroundImage: `url('${telephoneImage}')`
         }}
       ></div>
 
