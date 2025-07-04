@@ -22,7 +22,7 @@ const CreateBlog = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:3000/api/blogs/createblog',
+        'https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/createblog',
         { title, content, category },
         {
           headers: {

@@ -24,7 +24,7 @@ const AvatarDropdown = ({ user }) => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      await axios.get('http://localhost:3000/api/auth/logout', { withCredentials: true });
+      await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/logout', { withCredentials: true });
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       toast.success('Logout successful!', { position: 'top-right', autoClose: 2000 });

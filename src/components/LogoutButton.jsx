@@ -18,7 +18,7 @@ const LogoutButton = () => {
     setLocalLoading(true);
     setLoading(true);
     try {
-      await axios.get('http://localhost:3000/api/auth/logout', { withCredentials: true });
+      await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/logout', { withCredentials: true });
       localStorage.removeItem('token'); // Optional: if you store token in localStorage
       toast.success('Logout successful!', {
         position: 'top-right',

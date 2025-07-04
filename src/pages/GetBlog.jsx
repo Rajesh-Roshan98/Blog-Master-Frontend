@@ -13,7 +13,7 @@ const GetBlog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/blogs/myblogs', { withCredentials: true });
+      const response = await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/myblogs', { withCredentials: true });
       setBlogs(response.data.data);
       setLoading(false);
     } catch (error) {

@@ -15,7 +15,7 @@ const Settings = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/auth/profile', { withCredentials: true });
+        const res = await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/profile', { withCredentials: true });
         setUser(res.data.user);
         setName(res.data.user.firstname + (res.data.user.lastname ? ' ' + res.data.user.lastname : ''));
         setGender(res.data.user.gender || '');
@@ -35,7 +35,7 @@ const Settings = () => {
     try {
       const [firstname, ...rest] = name.split(' ');
       const lastname = rest.join(' ');
-      const res = await axios.put('http://localhost:3000/api/auth/profile', {
+      const res = await axios.put('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/profile', {
         firstname,
         lastname,
         gender,
@@ -58,7 +58,7 @@ const Settings = () => {
       return;
     }
     try {
-      await axios.put('http://localhost:3000/api/auth/password', {
+      await axios.put('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/password', {
         currentPassword,
         newPassword,
       }, { withCredentials: true });
@@ -73,7 +73,7 @@ const Settings = () => {
   const handleDeleteAccount = async () => {
     if (!window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
     try {
-      await axios.delete('http://localhost:3000/api/auth/account', { withCredentials: true });
+      await axios.delete('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/account', { withCredentials: true });
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       alert('⚠️ Account deleted!');

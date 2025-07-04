@@ -17,7 +17,7 @@ const ContactUs = () => {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:3000/api/contact/createcontact', formData);
+      await axios.post('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/createcontact', formData);
       toast.success('Message sent successfully!', {
         position: 'top-right',
         autoClose: 2500,

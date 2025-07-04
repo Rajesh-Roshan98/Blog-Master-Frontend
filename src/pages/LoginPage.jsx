@@ -15,7 +15,7 @@ const LoginPage = () => {
     e.preventDefault();
     setProcessing(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const response = await axios.post('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/login', {
         email,
         password,
       });
