@@ -8,7 +8,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('http://localhost:3000/api/auth/profile', { withCredentials: true });
+        const res = await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/profile', { withCredentials: true });
         setUser(res.data.user);
         localStorage.setItem('user', JSON.stringify(res.data.user));
       } catch (e) {
