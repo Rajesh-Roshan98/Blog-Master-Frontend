@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import Signup from './pages/Signup';
@@ -38,26 +38,24 @@ const App = () => {
   return (
     <LoadingContext.Provider value={{ loading, setLoading }}>
       <GlobalLoadingOverlay loading={loading} />
-      
-      {/* 🔔 Toast Notifications */}
       <ToastContainer />
-
-      {/* 🧭 Application Routes */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/aboutus" element={<ProtectedRoute><AboutUs /></ProtectedRoute>} />
-        <Route path="/contactus" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/createblog" element={<ProtectedRoute><CreateBlog /></ProtectedRoute>} />
-        <Route path="/getblog" element={<ProtectedRoute><GetBlog /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-      </Routes>
+      {/* ✅ Correct basename for GitHub Pages */}
+      <BrowserRouter basename="/Blog-Master-Frontend">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/aboutus" element={<ProtectedRoute><AboutUs /></ProtectedRoute>} />
+          <Route path="/contactus" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/createblog" element={<ProtectedRoute><CreateBlog /></ProtectedRoute>} />
+          <Route path="/getblog" element={<ProtectedRoute><GetBlog /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        </Routes>
+      </BrowserRouter>
     </LoadingContext.Provider>
   );
 };
 
 export default App;
-

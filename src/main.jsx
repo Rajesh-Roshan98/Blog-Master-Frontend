@@ -6,8 +6,6 @@ import './index.css'; // if using Tailwind
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
       <App />
-    </BrowserRouter>
   </StrictMode>
 );
