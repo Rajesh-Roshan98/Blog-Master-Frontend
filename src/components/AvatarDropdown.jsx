@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLoading } from './LogoutButton';
 import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 import { toast } from 'react-toastify';
 import { LogOut, User, Settings } from 'lucide-react';
 
@@ -24,7 +25,7 @@ const AvatarDropdown = ({ user }) => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/logout', { withCredentials: true });
+      await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       toast.success('Logout successful!', { position: 'top-right', autoClose: 2000 });

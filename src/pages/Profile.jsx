@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -8,7 +9,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/profile', { withCredentials: true });
+        const res = await axios.get(`${API_BASE_URL}/api/auth/profile`, { withCredentials: true });
         setUser(res.data.user);
         localStorage.setItem('user', JSON.stringify(res.data.user));
       } catch (e) {

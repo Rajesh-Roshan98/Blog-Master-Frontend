@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import EmojiPicker from 'emoji-picker-react';
@@ -22,7 +23,7 @@ const CreateBlog = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/createblog',
+        `${API_BASE_URL}/api/auth/createblog`,
         { title, content, category },
         {
           headers: {

@@ -1,5 +1,6 @@
 import React, { useState, createContext, useContext } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,7 +19,7 @@ const LogoutButton = () => {
     setLocalLoading(true);
     setLoading(true);
     try {
-      await axios.get('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/logout', { withCredentials: true });
+      await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
       localStorage.removeItem('token'); // Optional: if you store token in localStorage
       toast.success('Logout successful!', {
         position: 'top-right',

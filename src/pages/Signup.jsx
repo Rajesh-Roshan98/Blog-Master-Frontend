@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 
 const Signup = () => {
   const [formStage, setFormStage] = useState(false);
@@ -26,7 +27,7 @@ const Signup = () => {
   const sendOtp = async () => {
     setProcessing(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/sendotp', { email });
+      const response = await axios.post(`${API_BASE_URL}/api/auth/sendotp`, { email });
       setErrorMessage('');
       showSuccessToast(response.data.message || 'OTP sent to your email');
       setFormStage(true);
@@ -40,7 +41,7 @@ const Signup = () => {
   const createAccount = async () => {
     setProcessing(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/signup', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/signup`, {
         email,
         otp,
         firstname: firstName,

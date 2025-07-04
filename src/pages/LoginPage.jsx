@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +16,7 @@ const LoginPage = () => {
     e.preventDefault();
     setProcessing(true);
     try {
-      const response = await axios.post('https://rajesh-roshan98.github.io/Blog-Master-Frontend/api/auth/login', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         email,
         password,
       });
