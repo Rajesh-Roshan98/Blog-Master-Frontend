@@ -4,10 +4,11 @@ import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import telephoneImage from '../assets/top-view-blue-monday_ith-telephone.jpg';
+import telephoneImage from '../assets/top-view-blue-monday-concept-composition-with-telephone.jpg';
 
 
 const ContactUs = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const user = JSON.parse(localStorage.getItem('user'));
 
