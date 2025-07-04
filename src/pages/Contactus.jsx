@@ -4,8 +4,12 @@ import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import telephoneImage from '../assets/top-view-blue-monday-concept-composition-with-telephone.jpg';
 
+// ✅ Use Vite-compatible dynamic URL import
+const telephoneImage = new URL(
+  '../assets/top-view-blue-monday-concept-composition-with-telephone.jpg',
+  import.meta.url
+).href;
 
 const ContactUs = () => {
   const navigate = useNavigate();
@@ -43,7 +47,6 @@ const ContactUs = () => {
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover z-0"
         style={{ backgroundImage: `url(${telephoneImage})` }}
-
       ></div>
 
       <div className="relative bg-white/100 backdrop-blur-md shadow-2xl rounded-lg p-8 max-w-md w-full z-10">
@@ -102,13 +105,13 @@ const ContactUs = () => {
       <div className="absolute top-4 left-4 z-20">
         <button
           onClick={() => navigate(-1)}
-          className="text-blue-500  hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
+          className="text-blue-500 hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
         >
           <span className="text-lg">←</span> Back
         </button>
       </div>
 
-      {/* 🚪 Avatar Dropdown (top-right) */}
+      {/* Avatar Dropdown (top-right) */}
       <div className="absolute top-4 right-4 z-20">
         {user && <AvatarDropdown user={user} />}
       </div>
