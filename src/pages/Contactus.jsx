@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// ✅ Use Vite-compatible dynamic URL import
 const telephoneImage = new URL(
   '../assets/top-view-blue-monday-concept-composition-with-telephone.jpg',
   import.meta.url
@@ -15,6 +14,23 @@ const ContactUs = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const user = JSON.parse(localStorage.getItem('user'));
+  const token = localStorage.getItem('token');
+
+  // Autofill name and email from user
+  useEffect(() => {
+    if (user) {
+      const fullName = [user.firstname, user.middlename, user.lastname]
+        .filter(Boolean)
+        .join(' ')
+        .trim();
+
+      setFormData((prev) => ({
+        ...prev,
+        name: fullName,
+        email: user.email,
+      }));
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,14 +40,26 @@ const ContactUs = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`${API_BASE_URL}/api/contact/createcontact`, formData);
-      toast.success('Message sent successfully!', {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/contact/createcontact`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token ? `Bearer ${token}` : '',
+          },
+        }
+      );
+
+      toast.success(res.data?.message || 'Message sent successfully!', {
         position: 'top-right',
         autoClose: 2500,
         pauseOnHover: false,
         theme: 'colored',
       });
-      setFormData({ name: '', email: '', message: '' });
+
+      setFormData((prev) => ({ ...prev, message: '' })); // keep name/email, reset message
     } catch (error) {
       toast.error(error.response?.data?.error || 'Something went wrong.', {
         position: 'top-right',
@@ -59,10 +87,8 @@ const ContactUs = () => {
               type="text"
               name="name"
               value={formData.name}
-              onChange={handleChange}
-              placeholder="Your Name"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              readOnly
+              className="w-full border border-gray-300 px-4 py-2 rounded bg-gray-100 text-gray-800 cursor-not-allowed"
             />
           </div>
 
@@ -72,10 +98,8 @@ const ContactUs = () => {
               type="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
-              placeholder="your@email.com"
-              className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
+              readOnly
+              className="w-full border border-gray-300 px-4 py-2 rounded bg-gray-100 text-gray-800 cursor-not-allowed"
             />
           </div>
 
@@ -101,7 +125,7 @@ const ContactUs = () => {
         </form>
       </div>
 
-      {/* Back Button (top-left) */}
+      {/* Back Button */}
       <div className="absolute top-4 left-4 z-20">
         <button
           onClick={() => navigate(-1)}
@@ -111,7 +135,7 @@ const ContactUs = () => {
         </button>
       </div>
 
-      {/* Avatar Dropdown (top-right) */}
+      {/* Avatar Dropdown */}
       <div className="absolute top-4 right-4 z-20">
         {user && <AvatarDropdown user={user} />}
       </div>
