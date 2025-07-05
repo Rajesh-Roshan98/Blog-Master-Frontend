@@ -13,10 +13,10 @@ const telephoneImage = new URL(
 const ContactUs = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [loading, setLoading] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
   const token = localStorage.getItem('token');
 
-  // Autofill name and email from user
   useEffect(() => {
     if (user) {
       const fullName = [user.firstname, user.middlename, user.lastname]
@@ -38,6 +38,7 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -59,7 +60,7 @@ const ContactUs = () => {
         theme: 'colored',
       });
 
-      setFormData((prev) => ({ ...prev, message: '' })); // keep name/email, reset message
+      setFormData((prev) => ({ ...prev, message: '' }));
     } catch (error) {
       toast.error(error.response?.data?.error || 'Something went wrong.', {
         position: 'top-right',
@@ -67,6 +68,8 @@ const ContactUs = () => {
         pauseOnHover: false,
         theme: 'colored',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -118,14 +121,16 @@ const ContactUs = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+            disabled={loading}
+            className={`w-full py-2 rounded text-white transition ${
+              loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+            }`}
           >
-            Send Message
+            {loading ? 'Sending...' : 'Send Message'}
           </button>
         </form>
       </div>
 
-      {/* Back Button */}
       <div className="absolute top-4 left-4 z-20">
         <button
           onClick={() => navigate(-1)}
@@ -135,7 +140,6 @@ const ContactUs = () => {
         </button>
       </div>
 
-      {/* Avatar Dropdown */}
       <div className="absolute top-4 right-4 z-20">
         {user && <AvatarDropdown user={user} />}
       </div>
