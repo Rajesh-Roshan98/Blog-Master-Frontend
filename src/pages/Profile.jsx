@@ -5,23 +5,30 @@ import API_BASE_URL from '../utils/apiBase';
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(`${API_BASE_URL}/api/auth/profile`, { withCredentials: true });
+        const res = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
+          withCredentials: true, // important to send the cookie
+        });
         setUser(res.data.user);
         localStorage.setItem('user', JSON.stringify(res.data.user));
-      } catch (e) {
+      } catch (err) {
+        console.error("Error fetching profile:", err?.response?.data || err.message);
+        setError('Failed to fetch profile. Please login again.');
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProfile();
   }, []);
 
   if (loading) return <div className="p-8 text-center">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!user) return <div className="p-8 text-center">No user info found.</div>;
 
   return (
