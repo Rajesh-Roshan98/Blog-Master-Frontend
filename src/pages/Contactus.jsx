@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import API_BASE_URL from '../utils/apiBase';
 import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -25,7 +24,7 @@ const ContactUs = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`${API_BASE_URL}/api/auth/createcontact`, formData);
+      await axios.post(`${API_BASE_URL}/api/contact/createcontact`, formData);
       toast.success('Message sent successfully!', {
         position: 'top-right',
         autoClose: 2500,
