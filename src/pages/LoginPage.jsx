@@ -16,13 +16,13 @@ const LoginPage = () => {
     e.preventDefault();
     setProcessing(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-        email,
-        password,
-      });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user info
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/login`,
+        { email, password },
+        { withCredentials: true } // Send cookies (matches middleware)
+      );
 
+      const user = response.data.user;
       toast.success('Login successful! 🎉', {
         position: 'top-right',
         autoClose: 1000,
@@ -30,10 +30,12 @@ const LoginPage = () => {
         theme: 'colored',
       });
 
-      setTimeout(() => navigate('/dashboard'), 1100); // Delay to show toast before navigating
+      localStorage.setItem('user', JSON.stringify(user)); // Optional
+      setTimeout(() => navigate('/profile'), 1100);
     } catch (error) {
-      setErrorMsg('Invalid email or password. Please try again.');
-      toast.error('Login failed ❌', {
+      const msg = error?.response?.data?.message || 'Login failed. Please try again.';
+      setErrorMsg(msg);
+      toast.error(msg, {
         position: 'top-right',
         autoClose: 1000,
         pauseOnHover: false,
@@ -47,6 +49,7 @@ const LoginPage = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-white overflow-hidden">
       <ToastContainer />
+
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-60 z-0"
         style={{
@@ -57,12 +60,8 @@ const LoginPage = () => {
       <div className="absolute top-4 left-4 z-20">
         <button
           onClick={() => navigate('/')}
-          className="text-blue-500  hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
+          className="text-blue-500 hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
         >
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-          />
           <i className="fas fa-arrow-left"></i> Back
         </button>
       </div>
@@ -85,6 +84,7 @@ const LoginPage = () => {
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -96,6 +96,7 @@ const LoginPage = () => {
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
 
