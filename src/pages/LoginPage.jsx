@@ -31,7 +31,7 @@ const LoginPage = () => {
       });
 
       localStorage.setItem('user', JSON.stringify(user)); // Optional
-      setTimeout(() => navigate('/profile'), 1100);
+      setTimeout(() => navigate('/dashboard'), 1100);
     } catch (error) {
       const msg = error?.response?.data?.message || 'Login failed. Please try again.';
       setErrorMsg(msg);
