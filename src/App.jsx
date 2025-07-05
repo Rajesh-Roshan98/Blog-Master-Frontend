@@ -39,8 +39,8 @@ const App = () => {
     <LoadingContext.Provider value={{ loading, setLoading }}>
       <GlobalLoadingOverlay loading={loading} />
       <ToastContainer />
-      {/* ✅ Correct basename for GitHub Pages */}
-      <BrowserRouter basename="/Blog-Master-Frontend">
+      {/* No basename needed for Vercel deployment */}
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
