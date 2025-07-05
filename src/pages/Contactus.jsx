@@ -41,7 +41,7 @@ const ContactUs = () => {
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/contact/createcontact`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/contact/createcontact`,
         formData,
         {
           withCredentials: true,
