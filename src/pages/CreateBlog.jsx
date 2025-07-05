@@ -23,7 +23,7 @@ const CreateBlog = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `${API_BASE_URL}/api/auth/createblog`,
+        `${API_BASE_URL}/api/blogs/createblog`,
         { title, content, category },
         {
           headers: {
