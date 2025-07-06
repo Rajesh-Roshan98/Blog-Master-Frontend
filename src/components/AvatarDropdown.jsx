@@ -119,8 +119,8 @@ const AvatarDropdown = ({ user }) => {
 };
 
 export default AvatarDropdown;
-export const useAvatarDropdown = () => {
-  const [open, setOpen] = useState(false);
-  const toggleDropdown = () => setOpen((prev) => !prev);
-  return { open, toggleDropdown };
-}
+// export const useAvatarDropdown = () => {
+//   const [open, setOpen] = useState(false);
+//   const toggleDropdown = () => setOpen((prev) => !prev);
+//   return { open, toggleDropdown };
+// }
