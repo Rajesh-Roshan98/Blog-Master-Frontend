@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLoading } from './LogoutButton';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
 import { toast } from 'react-toastify';
 import { LogOut, User, Settings } from 'lucide-react';
 
+import { useAuth } from '../context/AuthContext'; // ✅ Import context
+import { useLoading } from './LogoutButton';
+
 const AvatarDropdown = ({ user }) => {
   const [open, setOpen] = useState(false);
   const { setLoading } = useLoading();
+  const { setUser } = useAuth(); // ✅ From AuthContext
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -26,8 +29,11 @@ const AvatarDropdown = ({ user }) => {
     setLoading(true);
     try {
       await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
-      localStorage.removeItem('token');
+
+      // ✅ Clear auth state
+      setUser(null);
       localStorage.removeItem('user');
+
       toast.success('Logout successful!', { position: 'top-right', autoClose: 2000 });
       setTimeout(() => navigate('/login', { replace: true }), 2000);
     } catch (err) {
@@ -58,7 +64,6 @@ const AvatarDropdown = ({ user }) => {
         )}
       </button>
 
-      {/* Dropdown menu */}
       {open && (
         <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border z-50 animate-fade-in-down">
           <div className="px-4 py-4 border-b flex items-center gap-3">
@@ -114,3 +119,8 @@ const AvatarDropdown = ({ user }) => {
 };
 
 export default AvatarDropdown;
+export const useAvatarDropdown = () => {
+  const [open, setOpen] = useState(false);
+  const toggleDropdown = () => setOpen((prev) => !prev);
+  return { open, toggleDropdown };
+}

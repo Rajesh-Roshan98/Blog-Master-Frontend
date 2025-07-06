@@ -4,14 +4,15 @@ import API_BASE_URL from '../utils/apiBase';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../context/AuthContext'; // NEW
 
-// Create a context for loading state
+// Create a context for global loading overlay
 export const LoadingContext = createContext({ loading: false, setLoading: () => {} });
-
 export const useLoading = () => useContext(LoadingContext);
 
 const LogoutButton = () => {
-  const { setLoading } = useLoading();
+  const { setUser } = useContext(AuthContext); // NEW: Auth context
+  const { setLoading } = useLoading();         // Global overlay
   const [localLoading, setLocalLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -20,13 +21,17 @@ const LogoutButton = () => {
     setLoading(true);
     try {
       await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
-      localStorage.removeItem('token'); // Optional: if you store token in localStorage
+
+      setUser(null); // 💥 Clear context
+      localStorage.removeItem('user'); // Optional fallback, if used
+
       toast.success('Logout successful!', {
         position: 'top-right',
         autoClose: 2000,
         pauseOnHover: false,
         theme: 'colored',
       });
+
       setTimeout(() => navigate('/login', { replace: true }), 2100);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -49,12 +54,14 @@ const LogoutButton = () => {
       disabled={localLoading}
     >
       {localLoading ? (
-        <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-        </svg>
+        <>
+          <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+          <span>Logging out...</span>
+        </>
       ) : 'Logout'}
-      {localLoading && <span>Logging out...</span>}
     </button>
   );
 };

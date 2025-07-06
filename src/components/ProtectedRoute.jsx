@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
+import API_BASE_URL from '../utils/apiBase';
 
 const ProtectedRoute = ({ children }) => {
-  // Check for token in localStorage or as a cookie
-  const hasLocalToken = !!localStorage.getItem('token');
-  const hasCookieToken = document.cookie.split(';').some(cookie => cookie.trim().startsWith('token='));
-  const isLoggedIn = hasLocalToken || hasCookieToken;
+  const { user, setUser } = useContext(AuthContext);
+  const [checking, setChecking] = useState(true);
 
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        // If user is already set in context, skip fetch
+        if (user) {
+          setChecking(false);
+          return;
+        }
+
+        const res = await axios.get(`${API_BASE_URL}/api/auth/profile`, {
+          withCredentials: true
+        });
+
+        if (res.data?.user) {
+          setUser(res.data.user);
+        }
+      } catch (err) {
+        // Optional: log or toast
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    fetchUser();
+  }, [user, setUser]);
+
+  if (checking) return null; // Or show a loading spinner
+
+  return user ? children : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

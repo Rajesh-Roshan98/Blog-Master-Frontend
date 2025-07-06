@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { AuthContext } from '../context/AuthContext'; // ✅ Import context
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ const LoginPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext); // ✅ Access setUser
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,10 +21,11 @@ const LoginPage = () => {
       const response = await axios.post(
         `${API_BASE_URL}/api/auth/login`,
         { email, password },
-        { withCredentials: true } // Send cookies (matches middleware)
+        { withCredentials: true }
       );
 
       const user = response.data.user;
+
       toast.success('Login successful! 🎉', {
         position: 'top-right',
         autoClose: 1000,
@@ -30,8 +33,8 @@ const LoginPage = () => {
         theme: 'colored',
       });
 
-      localStorage.setItem('user', JSON.stringify(user)); // Optional
-      setTimeout(() => navigate('/dashboard'), 1100);
+      setUser(user); // ✅ Update context instead of localStorage
+      navigate('/dashboard'); // ✅ Immediate redirect after login
     } catch (error) {
       const msg = error?.response?.data?.message || 'Login failed. Please try again.';
       setErrorMsg(msg);

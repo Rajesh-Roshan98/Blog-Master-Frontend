@@ -10,11 +10,14 @@ import CreateBlog from './pages/CreateBlog';
 import GetBlog from './pages/GetBlog';
 import ProtectedRoute from './components/ProtectedRoute';
 import LogoutButton, { LoadingContext } from './components/LogoutButton';
-import axios from 'axios';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+
+// ✅ Import the AuthProvider
+import { AuthProvider } from './context/AuthContext';
 
 axios.defaults.withCredentials = true;
 
@@ -36,25 +39,26 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <LoadingContext.Provider value={{ loading, setLoading }}>
-      <GlobalLoadingOverlay loading={loading} />
-      <ToastContainer />
-      {/* No basename needed for Vercel deployment */}
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/aboutus" element={<ProtectedRoute><AboutUs /></ProtectedRoute>} />
-          <Route path="/contactus" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
-          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/createblog" element={<ProtectedRoute><CreateBlog /></ProtectedRoute>} />
-          <Route path="/getblog" element={<ProtectedRoute><GetBlog /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-        </Routes>
-      </BrowserRouter>
-    </LoadingContext.Provider>
+    <AuthProvider> {/* ✅ Wrap entire app inside AuthProvider */}
+      <LoadingContext.Provider value={{ loading, setLoading }}>
+        <GlobalLoadingOverlay loading={loading} />
+        <ToastContainer />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/aboutus" element={<ProtectedRoute><AboutUs /></ProtectedRoute>} />
+            <Route path="/contactus" element={<ProtectedRoute><ContactUs /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/createblog" element={<ProtectedRoute><CreateBlog /></ProtectedRoute>} />
+            <Route path="/getblog" element={<ProtectedRoute><GetBlog /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          </Routes>
+        </BrowserRouter>
+      </LoadingContext.Provider>
+    </AuthProvider>
   );
 };
 
