@@ -42,13 +42,7 @@ const App = () => {
     <AuthProvider> {/* ✅ Wrap entire app inside AuthProvider */}
       <LoadingContext.Provider value={{ loading, setLoading }}>
         <GlobalLoadingOverlay loading={loading} />
-        <ToastContainer 
-          position="top-right"
-          autoClose={2500}
-          pauseOnHover={false}
-          theme="colored"
-          style={{ zIndex: 9999 }}
-        />
+        <ToastContainer />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
