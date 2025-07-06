@@ -3,15 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
 import { toast } from 'react-toastify';
-import { LogOut, User, Settings } from 'lucide-react';
+import { LogOut, User, Settings, Menu } from 'lucide-react';
 
-import { useAuth } from '../context/AuthContext'; // ✅ Import context
+import { useAuth } from '../context/AuthContext';
 import { useLoading } from './LogoutButton';
 
 const AvatarDropdown = ({ user }) => {
   const [open, setOpen] = useState(false);
   const { setLoading } = useLoading();
-  const { setUser } = useAuth(); // ✅ From AuthContext
+  const { setUser } = useAuth();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -29,15 +29,12 @@ const AvatarDropdown = ({ user }) => {
     setLoading(true);
     try {
       await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
-
-      // ✅ Clear auth state
       setUser(null);
       localStorage.removeItem('user');
-
-      toast.success('Logout successful!', { position: 'top-right', autoClose: 2000 });
-      setTimeout(() => navigate('/login', { replace: true }), 2000);
+      toast.success('Logout successful!');
+      navigate('/login', { replace: true });
     } catch (err) {
-      toast.error('Logout failed!', { position: 'top-right', autoClose: 2000 });
+      toast.error('Logout failed!');
     } finally {
       setLoading(false);
     }
@@ -45,9 +42,10 @@ const AvatarDropdown = ({ user }) => {
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
+      {/* Desktop Avatar */}
       <button
         onClick={() => setOpen((prev) => !prev)}
-        className="rounded-full focus:outline-none hover:scale-105 transition-transform"
+        className="hidden sm:flex rounded-full focus:outline-none hover:scale-105 transition-transform"
         aria-label="User menu"
       >
         {user.avatar ? (
@@ -64,6 +62,16 @@ const AvatarDropdown = ({ user }) => {
         )}
       </button>
 
+      {/* Mobile Hamburger */}
+      <button
+        onClick={() => setOpen((prev) => !prev)}
+        className="sm:hidden flex items-center justify-center w-10 h-10 border border-blue-400 rounded-md text-blue-600 hover:bg-blue-100"
+        aria-label="Mobile menu"
+      >
+        <Menu />
+      </button>
+
+      {/* Dropdown */}
       {open && (
         <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border z-50 animate-fade-in-down">
           <div className="px-4 py-4 border-b flex items-center gap-3">
@@ -119,8 +127,3 @@ const AvatarDropdown = ({ user }) => {
 };
 
 export default AvatarDropdown;
-// export const useAvatarDropdown = () => {
-//   const [open, setOpen] = useState(false);
-//   const toggleDropdown = () => setOpen((prev) => !prev);
-//   return { open, toggleDropdown };
-// }
