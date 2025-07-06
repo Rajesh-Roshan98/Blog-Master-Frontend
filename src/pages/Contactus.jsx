@@ -4,6 +4,7 @@ import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth } from '../context/AuthContext'; // ✅ Use context
 
 const telephoneImage = new URL(
   '../assets/top-view-blue-monday-concept-composition-with-telephone.jpg',
@@ -12,10 +13,10 @@ const telephoneImage = new URL(
 
 const ContactUs = () => {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth(); // ✅ Get user from context
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
-  const user = JSON.parse(localStorage.getItem('user'));
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token'); // ⬅️ Keep if your backend still needs it
 
   useEffect(() => {
     if (user) {
@@ -141,7 +142,7 @@ const ContactUs = () => {
       </div>
 
       <div className="absolute top-4 right-4 z-20">
-        {user && <AvatarDropdown user={user} />}
+        {!authLoading && user && <AvatarDropdown user={user} />} {/* ✅ Show only when user is ready */}
       </div>
     </div>
   );
