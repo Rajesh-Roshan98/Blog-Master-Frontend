@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import AvatarDropdown from '../components/AvatarDropdown';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useAuth } from '../context/AuthContext'; // ✅ Use context
+import { useAuth } from '../context/AuthContext';
+import HeaderBar from '../components/HeaderBar'; // ✅ Import HeaderBar
 
 const telephoneImage = new URL(
   '../assets/top-view-blue-monday-concept-composition-with-telephone.jpg',
@@ -12,11 +11,10 @@ const telephoneImage = new URL(
 ).href;
 
 const ContactUs = () => {
-  const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth(); // ✅ Get user from context
+  const { user, loading: authLoading } = useAuth();
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [loading, setLoading] = useState(false);
-  const token = localStorage.getItem('token'); // ⬅️ Keep if your backend still needs it
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (user) {
@@ -74,13 +72,20 @@ const ContactUs = () => {
     }
   };
 
+  if (authLoading) return null;
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 to-white flex items-center justify-center px-4 relative">
+      {/* 🔼 HeaderBar with back + avatar */}
+      <HeaderBar />
+
+      {/* Background */}
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover z-0"
         style={{ backgroundImage: `url(${telephoneImage})` }}
       ></div>
 
+      {/* Contact Form */}
       <div className="relative bg-white/100 backdrop-blur-md shadow-2xl rounded-lg p-8 max-w-md w-full z-10">
         <h2 className="text-3xl font-semibold text-center text-blue-700 mb-6">Contact Us</h2>
 
@@ -130,19 +135,6 @@ const ContactUs = () => {
             {loading ? 'Sending...' : 'Send Message'}
           </button>
         </form>
-      </div>
-
-      <div className="absolute top-4 left-4 z-20">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-blue-500 hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
-        >
-          <span className="text-lg">←</span> Back
-        </button>
-      </div>
-
-      <div className="absolute top-4 right-4 z-20">
-        {!authLoading && user && <AvatarDropdown user={user} />} {/* ✅ Show only when user is ready */}
       </div>
     </div>
   );

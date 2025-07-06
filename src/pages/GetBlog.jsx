@@ -2,23 +2,27 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
 import { useNavigate } from 'react-router-dom';
-import AvatarDropdown from '../components/AvatarDropdown';
+import HeaderBar from '../components/HeaderBar';
+import { useAuth } from '../context/AuthContext';
 
 const GetBlog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  // Get user info from localStorage
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user, loading: authLoading } = useAuth();
 
   const fetchBlogs = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/blogs/myblogs`, { withCredentials: true });
+      const response = await axios.get(`${API_BASE_URL}/api/blogs/myblogs`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
       setBlogs(response.data.data);
-      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch blogs:', error);
+    } finally {
       setLoading(false);
     }
   };
@@ -27,23 +31,12 @@ const GetBlog = () => {
     fetchBlogs();
   }, []);
 
+  if (authLoading) return null;
+
   return (
     <div className="min-h-screen bg-blue-50 px-4 py-10 relative">
-
-      {/* Back Button (top-left) */}
-      <div className="absolute top-4 left-4 z-20">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-blue-500  hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
-        >
-          <span className="text-lg">←</span> Back
-        </button>
-      </div>
-
-      {/* Avatar Dropdown (top-right) */}
-      <div className="absolute top-4 right-4 z-20">
-        {user && <AvatarDropdown user={user} />}
-      </div>
+      {/* ✅ Shared Header */}
+      <HeaderBar />
 
       {/* Header */}
       <div className="flex items-center justify-between mb-10 max-w-6xl mx-auto">
@@ -64,7 +57,10 @@ const GetBlog = () => {
           <p className="col-span-full text-center text-gray-600">No blogs found.</p>
         ) : (
           blogs.map((blog) => (
-            <div key={blog._id} className="bg-white shadow rounded-xl p-6 border border-blue-100 hover:shadow-lg transition">
+            <div
+              key={blog._id}
+              className="bg-white shadow rounded-xl p-6 border border-blue-100 hover:shadow-lg transition"
+            >
               <h3 className="text-xl font-semibold text-blue-700 mb-2">{blog.title}</h3>
               <p className="text-gray-700 mb-3">{blog.content.slice(0, 100)}...</p>
               <div className="text-sm text-gray-500 mb-1">

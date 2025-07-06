@@ -1,18 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import AvatarDropdown from '../components/AvatarDropdown';
+import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { loading } = useAuth(); // user is already handled in HeaderBar
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-blue-50 text-blue-600 text-xl font-semibold">
+        Loading your dashboard...
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen flex flex-col justify-between bg-gradient-to-br from-blue-100 to-white px-6 py-16">
-
-      {/* 🚪 Avatar Dropdown (top-right) */}
-      <div className="absolute top-4 right-4 z-20">
-        {user && <AvatarDropdown user={user} />}
-      </div>
 
       {/* 🔵 Background Image Layer */}
       <div

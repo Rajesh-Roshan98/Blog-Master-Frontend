@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
-import AvatarDropdown from '../components/AvatarDropdown';
 import { useNavigate } from 'react-router-dom';
 import EmojiPicker from 'emoji-picker-react';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthContext';
+import HeaderBar from '../components/HeaderBar';
 
 const CreateBlog = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
-
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user, loading } = useAuth();
 
   const handleEmojiClick = (emojiData) => {
     setContent((prev) => prev + emojiData.emoji);
@@ -21,6 +22,12 @@ const CreateBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const confirmed = window.confirm('Are you sure you want to publish this blog?');
+    if (!confirmed) return;
+
+    setSubmitting(true);
+
     try {
       await axios.post(
         `${API_BASE_URL}/api/blogs/createblog`,
@@ -35,45 +42,33 @@ const CreateBlog = () => {
       navigate('/dashboard');
     } catch (error) {
       toast.error('Failed to create blog');
+    } finally {
+      setSubmitting(false);
     }
   };
 
+  if (loading) return null;
+
   return (
     <div className="min-h-screen bg-blue-50 flex items-center justify-center relative px-4">
+      <HeaderBar />
 
-      {/* Back Button (top-left) */}
-      <div className="absolute top-4 left-4 z-20">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-blue-500  hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
-        >
-          <span className="text-lg">←</span> Back
-        </button>
-      </div>
-
-      {/* Avatar Dropdown */}
-      <div className="absolute top-4 right-4 z-20">
-        {user && <AvatarDropdown user={user} />}
-      </div>
-
-      {/* Form Container */}
       <div className="relative z-10 bg-white p-8 rounded-xl shadow-2xl w-full max-w-xl">
         <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">Create a New Blog</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
-          {/* Author (Read-Only) */}
+          {/* Author */}
           <div>
             <label className="block text-sm text-gray-600 mb-1">Author</label>
             <input
               type="text"
-              value={`${user?.firstname} ${user?.lastname}`}
+              value={`${user?.firstname || ''} ${user?.lastname || ''}`}
               disabled
               className="w-full border border-gray-300 px-4 py-2 rounded bg-gray-100 cursor-not-allowed text-gray-600"
             />
           </div>
 
-          {/* Blog Type (Title) */}
+          {/* Blog Title */}
           <div>
             <label className="block text-sm text-gray-600 mb-1">Blog Type</label>
             <select
@@ -124,12 +119,15 @@ const CreateBlog = () => {
             />
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+            disabled={submitting}
+            className={`w-full text-white py-2 rounded transition ${
+              submitting ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'
+            }`}
           >
-            Publish Blog
+            {submitting ? 'Publishing...' : 'Publish Blog'}
           </button>
         </form>
       </div>
