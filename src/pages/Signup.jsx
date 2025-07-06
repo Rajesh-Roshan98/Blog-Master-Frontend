@@ -19,9 +19,7 @@ const Signup = () => {
 
   const showSuccessToast = (msg) => {
     setSuccessMessage(msg);
-    setTimeout(() => {
-      setSuccessMessage('');
-    }, 3000);
+    setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   const sendOtp = async () => {
@@ -70,7 +68,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-white relative">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-blue-100 to-white relative">
+      {/* Background Image */}
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-60 z-0"
         style={{
@@ -78,19 +77,20 @@ const Signup = () => {
         }}
       />
 
-      {/* Success Toast */}
+      {/* Toast Message */}
       {successMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
+        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-4 py-2 rounded shadow-lg text-sm">
           {successMessage}
         </div>
       )}
 
-      <div className="bg-white bg-opacity-90 z-10 p-6 rounded shadow-md w-full max-w-md">
+      {/* Signup Box */}
+      <div className="relative bg-white bg-opacity-90 z-10 p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-blue-500 mb-6">
-          {formStage ? 'Complete Registration' : 'Verify Email to Continue Signup'}
+          {formStage ? 'Complete Registration' : 'Verify Email to Continue'}
         </h2>
 
-        {/* Error Message */}
+        {/* Error */}
         {errorMessage && (
           <div className="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded text-sm border border-red-300">
             {errorMessage}
@@ -104,7 +104,7 @@ const Signup = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded border-gray-300"
+              className="w-full px-4 py-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
               required
             />
           </div>
@@ -121,6 +121,7 @@ const Signup = () => {
                   required
                 />
               </div>
+
               <div>
                 <label className="block text-sm mb-1 text-gray-700">First Name</label>
                 <input
@@ -131,6 +132,7 @@ const Signup = () => {
                   required
                 />
               </div>
+
               <div>
                 <label className="block text-sm mb-1 text-gray-700">Middle Name</label>
                 <input
@@ -140,6 +142,7 @@ const Signup = () => {
                   className="w-full px-4 py-2 border rounded border-gray-300"
                 />
               </div>
+
               <div>
                 <label className="block text-sm mb-1 text-gray-700">Last Name</label>
                 <input
@@ -150,6 +153,7 @@ const Signup = () => {
                   required
                 />
               </div>
+
               <div>
                 <label className="block text-sm mb-1 text-gray-700">Gender</label>
                 <select
@@ -163,6 +167,7 @@ const Signup = () => {
                   <option value="Female">Female</option>
                 </select>
               </div>
+
               <div>
                 <label className="block text-sm mb-1 text-gray-700">Password</label>
                 <input
@@ -181,13 +186,22 @@ const Signup = () => {
             className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition"
             disabled={processing}
           >
-            {processing ? (formStage ? 'Signing Up...' : 'Sending OTP...') : (formStage ? 'Sign Up' : 'Send OTP')}
+            {processing
+              ? formStage
+                ? 'Signing Up...'
+                : 'Sending OTP...'
+              : formStage
+              ? 'Sign Up'
+              : 'Send OTP'}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <button onClick={() => navigate('/login')} className="text-blue-500 hover:underline">
+          <button
+            onClick={() => navigate('/login')}
+            className="text-blue-500 hover:underline"
+          >
             Login
           </button>
         </p>

@@ -4,8 +4,7 @@ import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthContext } from '../context/AuthContext'; // ✅ Import context
-
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +12,7 @@ const LoginPage = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext); // ✅ Access setUser
+  const { setUser } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +23,6 @@ const LoginPage = () => {
         { email, password },
         { withCredentials: true }
       );
-
       const user = response.data.user;
 
       toast.success('Login successful! 🎉', {
@@ -34,8 +32,8 @@ const LoginPage = () => {
         theme: 'colored',
       });
 
-      setUser(user); // ✅ Update context instead of localStorage
-      navigate('/dashboard'); // ✅ Immediate redirect after login
+      setUser(user);
+      navigate('/dashboard');
     } catch (error) {
       const msg = error?.response?.data?.message || 'Login failed. Please try again.';
       setErrorMsg(msg);
@@ -51,9 +49,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-white overflow-hidden">
+    <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-white overflow-hidden px-4">
       <ToastContainer />
 
+      {/* Background Image */}
       <div
         className="absolute inset-0 bg-no-repeat bg-center bg-cover opacity-60 z-0"
         style={{
@@ -61,16 +60,18 @@ const LoginPage = () => {
         }}
       />
 
-      <div className="absolute top-4 left-4 z-20">
+      {/* Back Button (hidden on small screens) */}
+      <div className="absolute top-4 left-4 z-20 hidden md:block">
         <button
           onClick={() => navigate('/')}
-          className="text-blue-500 hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl cursor-pointer shadow"
+          className="text-blue-500 hover:border-white hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl shadow"
         >
-          <i className="fas fa-arrow-left"></i> Back
+          ← Back
         </button>
       </div>
 
-      <div className="bg-white bg-opacity-90 shadow-xl rounded-xl p-8 max-w-md w-full z-10">
+      {/* Login Form */}
+      <div className="relative bg-white bg-opacity-90 shadow-xl rounded-xl p-6 sm:p-8 w-full max-w-sm sm:max-w-md z-10">
         <h2 className="text-2xl font-bold text-center text-blue-500 mb-6">Login to BlogMaster</h2>
 
         {errorMsg && (
