@@ -5,6 +5,8 @@ import API_BASE_URL from '../utils/apiBase';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../context/AuthContext'; // ✅ Import context
+import { useContext } from 'react';
+
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');

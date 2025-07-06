@@ -7,6 +7,7 @@ import { LogOut, User, Settings } from 'lucide-react';
 
 import { useAuth } from '../context/AuthContext'; // ✅ Import context
 import { useLoading } from './LogoutButton';
+import { useContext } from 'react';
 
 const AvatarDropdown = ({ user }) => {
   const [open, setOpen] = useState(false);

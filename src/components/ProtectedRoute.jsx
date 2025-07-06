@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
+import { useContext } from 'react';
 
 const ProtectedRoute = ({ children }) => {
   const { user, setUser } = useContext(AuthContext);
