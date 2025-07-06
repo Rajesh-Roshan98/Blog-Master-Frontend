@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthContext } from '../context/AuthContext'; // NEW
-import { useContext } from 'react';
 
 // Create a context for global loading overlay
 export const LoadingContext = createContext({ loading: false, setLoading: () => {} });
