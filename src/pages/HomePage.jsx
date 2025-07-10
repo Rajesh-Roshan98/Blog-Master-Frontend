@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaUserCircle, FaTimes } from 'react-icons/fa';
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [fade, setFade] = useState(false);
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setShowAuthPopup(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const features = [
     {
@@ -43,45 +53,93 @@ const HomePage = () => {
           from { opacity: 1; }
           to { opacity: 0; }
         }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .popup-animate {
+          animation: fadeIn 0.3s ease-out forwards;
+        }
+        .icon-bounce:hover {
+          animation: bounce 0.6s;
+        }
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-4px); }
+        }
       `}</style>
 
       <div className={`min-h-screen bg-gradient-to-r from-blue-100 via-white to-blue-200 text-gray-800 font-sans ${fade ? 'fade-out' : ''}`}>
 
         {/* Header */}
         <header className="sticky top-0 z-50 bg-white shadow-md px-4 py-4 md:px-6 transition duration-300">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="max-w-7xl mx-auto flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 
-            {/* Logo & Search */}
-            <div className="flex flex-col md:flex-row items-center w-full gap-4 md:gap-6">
-              <h1 className="text-2xl font-extrabold text-blue-600 whitespace-nowrap hover:scale-105 transition">
-                BlogMaster
-              </h1>
+            {/* Logo */}
+            <h1 className="text-2xl font-extrabold text-blue-600 whitespace-nowrap hover:scale-105 transition">
+              BlogMaster
+            </h1>
+
+            {/* Search + Icon */}
+            <div className="w-full flex items-center justify-between gap-3 md:w-auto">
               <input
                 type="text"
                 placeholder="Search blogs..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full md:w-80 border border-gray-300 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+                className="flex-1 border border-gray-300 px-4 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
               />
-            </div>
-
-            {/* Auth Buttons */}
-            <div className="flex gap-3">
               <button
-                onClick={handleLoginClick}
-                className="px-4 py-2 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition text-sm"
+                onClick={() => setShowAuthPopup(true)}
+                className="text-2xl text-gray-700 hover:text-blue-600 focus:outline-none icon-bounce"
               >
-                Login
-              </button>
-              <button
-                onClick={() => navigate('/signup')}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm"
-              >
-                Sign Up
+                <FaUserCircle />
               </button>
             </div>
           </div>
         </header>
+
+        {/* Auth Popup Overlay */}
+        {showAuthPopup && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+              onClick={() => setShowAuthPopup(false)}
+            />
+            <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-sm z-50 bg-white rounded-lg shadow-lg p-6 popup-animate relative">
+              {/* Close Button */}
+              <button
+                onClick={() => setShowAuthPopup(false)}
+                className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-lg"
+              >
+                <FaTimes />
+              </button>
+
+              <h2 className="text-lg font-semibold mb-2 text-gray-800">Welcome to BlogMaster</h2>
+              <p className="text-sm text-gray-600 mb-4">Please login or create an account to continue.</p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  onClick={() => {
+                    setShowAuthPopup(false);
+                    navigate('/login');
+                  }}
+                >
+                  Login
+                </button>
+                <button
+                  className="w-full sm:w-auto px-4 py-2 border border-blue-600 text-blue-600 rounded hover:bg-blue-50 transition"
+                  onClick={() => {
+                    setShowAuthPopup(false);
+                    navigate('/signup');
+                  }}
+                >
+                  Sign Up
+                </button>
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Hero Section */}
         <section className="flex flex-col-reverse md:flex-row items-center justify-between px-4 md:px-12 py-16 md:py-24 max-w-7xl mx-auto gap-10">
@@ -103,7 +161,7 @@ const HomePage = () => {
 
           <img
             src="https://img.freepik.com/free-photo/front-view-female-student-white-shirt-holding-pen-copybook-thinking-blue-wall_140725-38457.jpg?semt=ais_hybrid&w=740"
-            alt="Hero"
+            alt="A thoughtful young woman with notebook"
             className="w-full max-w-xs md:max-w-lg rounded-xl shadow-lg grow-shrink"
           />
         </section>
