@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './index.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
