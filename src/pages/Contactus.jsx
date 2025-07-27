@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import HeaderBar from '../components/HeaderBar'; // ✅ Import HeaderBar
 
 const telephoneImage = new URL(
-  '../assets/ContactUsImage.jpg',
+  '../assets/ContactImage.jpg',
   import.meta.url
 ).href;
 
