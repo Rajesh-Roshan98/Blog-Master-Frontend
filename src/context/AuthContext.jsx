@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { toast } from 'react-hot-toast'; // Optional: for user feedback
 
 export const AuthContext = createContext();
 
@@ -25,11 +26,28 @@ export const AuthProvider = ({ children }) => {
     fetchProfile();
   }, []);
 
+  // ✅ Logout function
+  const logout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {}, {
+        withCredentials: true,
+      });
+      setUser(null);
+      toast.success('Logged out successfully');
+    } catch (err) {
+      toast.error('Logout failed');
+      console.error('Logout error:', err);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading }}>
+    <AuthContext.Provider value={{ user, setUser, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+export const useLoading = () => useContext(AuthContext);
+export const useLogout = () => useContext(AuthContext);

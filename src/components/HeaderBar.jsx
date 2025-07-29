@@ -26,11 +26,12 @@ const HeaderBar = () => {
     };
   }, [sidebarOpen]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     setSidebarOpen(false);
     navigate('/login');
   };
+
 
   return (
     <div className="absolute top-4 left-0 right-0 px-6 flex justify-between items-center z-20">
