@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../utils/apiBase';
 import { toast } from 'react-toastify';
@@ -13,7 +13,13 @@ const AvatarDropdown = ({ user }) => {
   const { setLoading } = useLoading();
   const { setUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // 🔥 route listener
   const dropdownRef = useRef(null);
+
+  // 🔄 Close dropdown on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -43,13 +49,13 @@ const AvatarDropdown = ({ user }) => {
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
-      {/* Avatar Button - Responsive for all screens */}
+      {/* Avatar Button */}
       <button
         onClick={() => setOpen((prev) => !prev)}
         aria-label="User menu"
         aria-expanded={open}
         aria-haspopup="true"
-        className="flex rounded-full focus:outline-none hover:scale-105 transition-transform"
+        className="flex rounded-full focus:outline-none hover:ring-2 hover:ring-blue-400 transition"
       >
         {user.avatar ? (
           <img
@@ -67,11 +73,11 @@ const AvatarDropdown = ({ user }) => {
 
       {/* Dropdown Menu */}
       <div
-        className={`absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border z-50 transition-all duration-200 origin-top transform ${
+        className={`absolute right-0 mt-3 w-56 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border dark:border-zinc-700 z-50 transition-all duration-200 origin-top transform ${
           open ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
       >
-        <div className="px-4 py-4 border-b flex items-center gap-3">
+        <div className="px-4 py-4 border-b dark:border-zinc-700 flex items-center gap-3">
           {user.avatar ? (
             <img
               src={user.avatar}
@@ -85,42 +91,34 @@ const AvatarDropdown = ({ user }) => {
             </div>
           )}
           <div>
-            <div className="font-semibold text-blue-700">
+            <div className="font-semibold text-blue-700 dark:text-white">
               {user.firstname} {user.lastname}
             </div>
-            <div className="text-xs text-gray-500">{user.email}</div>
+            <div className="text-xs text-gray-500 dark:text-zinc-400">{user.email}</div>
           </div>
         </div>
+
         <ul className="flex flex-col py-2">
           <li>
             <button
-              onClick={() => {
-                setOpen(false);
-                navigate('/profile');
-              }}
-              className="w-full px-5 py-2 flex items-center gap-3 hover:bg-blue-50 text-gray-700 transition"
+              onClick={() => navigate('/profile')}
+              className="w-full px-5 py-2 flex items-center gap-3 hover:bg-blue-50 dark:hover:bg-zinc-800 text-gray-700 dark:text-white transition"
             >
               <User size={18} /> Profile
             </button>
           </li>
           <li>
             <button
-              onClick={() => {
-                setOpen(false);
-                navigate('/settings');
-              }}
-              className="w-full px-5 py-2 flex items-center gap-3 hover:bg-blue-50 text-gray-700 transition"
+              onClick={() => navigate('/settings')}
+              className="w-full px-5 py-2 flex items-center gap-3 hover:bg-blue-50 dark:hover:bg-zinc-800 text-gray-700 dark:text-white transition"
             >
               <Settings size={18} /> Settings
             </button>
           </li>
-          <li className="pt-2 border-t">
+          <li className="pt-2 border-t dark:border-zinc-700">
             <button
-              onClick={() => {
-                setOpen(false);
-                handleLogout();
-              }}
-              className="w-full px-5 py-2 flex items-center gap-3 text-red-600 hover:bg-red-50 transition"
+              onClick={handleLogout}
+              className="w-full px-5 py-2 flex items-center gap-3 text-red-600 hover:bg-red-50 dark:hover:bg-zinc-800 transition"
             >
               <LogOut size={18} /> Logout
             </button>
