@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Menu, User, Settings, LogOut } from 'lucide-react';
+import AvatarDropdown from './AvatarDropdown';
 
 const HeaderBar = () => {
   const navigate = useNavigate();
