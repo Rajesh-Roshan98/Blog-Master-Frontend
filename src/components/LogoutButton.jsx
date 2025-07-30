@@ -1,18 +1,13 @@
-import React, { useState, createContext, useContext } from 'react';
-import axios from 'axios';
-import API_BASE_URL from '../utils/apiBase';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext'; // Centralized auth
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthContext } from '../context/AuthContext'; // NEW
-
-// Create a context for global loading overlay
-export const LoadingContext = createContext({ loading: false, setLoading: () => {} });
-export const useLoading = () => useContext(LoadingContext);
 
 const LogoutButton = () => {
-  const { setUser } = useContext(AuthContext); // NEW: Auth context
-  const { setLoading } = useLoading();         // Global overlay
+  const { logout } = useAuth(); // ✅ Use centralized logout
+  const { setLoading } = useLoading(); // Global overlay
   const [localLoading, setLocalLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -20,21 +15,8 @@ const LogoutButton = () => {
     setLocalLoading(true);
     setLoading(true);
     try {
-      await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
-
-      setUser(null); // 💥 Clear context
-      localStorage.removeItem('user'); // Optional fallback, if used
-
-      toast.success('Logout successful!', {
-        position: 'top-right',
-        autoClose: 2000,
-        pauseOnHover: false,
-        theme: 'colored',
-      });
-
-      setTimeout(() => navigate('/login', { replace: true }), 2100);
-    } catch (error) {
-      console.error('Logout failed:', error);
+      await logout(navigate); // ✅ Clean call to context logout
+    } catch (err) {
       toast.error('Logout failed!', {
         position: 'top-right',
         autoClose: 2000,

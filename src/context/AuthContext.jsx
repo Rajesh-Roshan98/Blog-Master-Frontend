@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     fetchProfile();
   }, []);
 
-  // ✅ Centralized logout
+  // ✅ Updated logout function to prevent back navigation to dashboard
   const logout = async (navigate) => {
     try {
       await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem('user');
       toast.success('Logout successful!');
-      if (navigate) navigate('/login');
+      if (navigate) navigate('/login', { replace: true }); // ✅ critical fix
     } catch (err) {
       toast.error('Logout failed!');
       console.error('Logout error:', err);
