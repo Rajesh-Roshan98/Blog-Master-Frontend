@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './index.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -10,22 +10,19 @@ import Dashboard from './pages/Dashboard';
 import CreateBlog from './pages/CreateBlog';
 import GetBlog from './pages/GetBlog';
 import ProtectedRoute from './components/ProtectedRoute';
-import LogoutButton, { LoadingContext } from './components/LogoutButton';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
+import HeaderBar from './components/HeaderBar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
-// ✅ New: HeaderBar
-import HeaderBar from './components/HeaderBar';
-
-// ✅ Import AuthProvider
+// ✅ Context providers
 import { AuthProvider } from './context/AuthContext';
+import { LoadingProvider, useLoading } from './context/LoadingContext';
 
 axios.defaults.withCredentials = true;
 
-// ✅ Helper component to use useLocation outside Router
 const LayoutWithHeader = ({ children }) => {
   const location = useLocation();
   const hideHeaderRoutes = ['/login', '/signup'];
@@ -39,8 +36,10 @@ const LayoutWithHeader = ({ children }) => {
   );
 };
 
-const GlobalLoadingOverlay = ({ loading }) =>
-  loading ? (
+const GlobalLoadingOverlay = () => {
+  const { loading } = useLoading();
+
+  return loading ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
       <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
         <svg
@@ -49,7 +48,14 @@ const GlobalLoadingOverlay = ({ loading }) =>
           fill="none"
           viewBox="0 0 24 24"
         >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          ></circle>
           <path
             className="opacity-75"
             fill="currentColor"
@@ -60,14 +66,13 @@ const GlobalLoadingOverlay = ({ loading }) =>
       </div>
     </div>
   ) : null;
+};
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-
   return (
     <AuthProvider>
-      <LoadingContext.Provider value={{ loading, setLoading }}>
-        <GlobalLoadingOverlay loading={loading} />
+      <LoadingProvider>
+        <GlobalLoadingOverlay />
         <ToastContainer />
         <BrowserRouter>
           <LayoutWithHeader>
@@ -85,7 +90,7 @@ const App = () => {
             </Routes>
           </LayoutWithHeader>
         </BrowserRouter>
-      </LoadingContext.Provider>
+      </LoadingProvider>
     </AuthProvider>
   );
 };
