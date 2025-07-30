@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     fetchProfile();
   }, []);
 
-  // ✅ Updated logout function to prevent back navigation to dashboard
+  // ✅ Updated logout function to support spinner with await
   const logout = async (navigate) => {
     try {
       await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {
@@ -34,10 +34,11 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       localStorage.removeItem('user');
       toast.success('Logout successful!');
-      if (navigate) navigate('/login', { replace: true }); // ✅ critical fix
+      if (navigate) navigate('/login', { replace: true });
     } catch (err) {
       toast.error('Logout failed!');
       console.error('Logout error:', err);
+      throw err; // ✅ Let caller know it failed (important for spinner cleanup)
     }
   };
 
