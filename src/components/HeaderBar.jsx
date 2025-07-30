@@ -2,14 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Menu, User, Settings, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { useLoading } from '../context/LoadingContext'; // ✅ Import loading context
 import AvatarDropdown from './AvatarDropdown';
+import { Loader2 } from 'lucide-react'; // Spinner icon
 
 const HeaderBar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { setLoading } = useLoading(); // ✅ Get setLoading function
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const sidebarRef = useRef(null);
 
   useEffect(() => {
@@ -28,12 +28,15 @@ const HeaderBar = () => {
     };
   }, [sidebarOpen]);
 
-  // ✅ Updated logout with loading
   const handleLogout = async () => {
-    setLoading(true); // Show spinner
-    await logout(navigate); // Centralized logout function (make sure it's async)
-    setLoading(false); // Hide spinner
-    setSidebarOpen(false);
+    try {
+      setLoggingOut(true);
+      await logout(navigate);
+    } catch (err) {
+      // already handled in context
+    } finally {
+      setLoggingOut(false);
+    }
   };
 
   return (
@@ -93,10 +96,24 @@ const HeaderBar = () => {
           </button>
 
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 text-gray-800 hover:text-red-600"
+            onClick={() => {
+              setSidebarOpen(false);
+              handleLogout();
+            }}
+            className="flex items-center gap-3 text-gray-800 hover:text-red-600 disabled:opacity-50"
+            disabled={loggingOut}
           >
-            <LogOut size={20} /> Logout
+            {loggingOut ? (
+              <>
+                <Loader2 size={18} className="animate-spin text-red-500" />
+                Logging out...
+              </>
+            ) : (
+              <>
+                <LogOut size={20} />
+                Logout
+              </>
+            )}
           </button>
         </div>
       </div>
