@@ -1,14 +1,13 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { toast } from 'react-hot-toast'; // Optional: for user feedback
+import { toast } from 'react-hot-toast';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // for initial fetch
+  const [loading, setLoading] = useState(true);
 
-  // Auto-fetch user if cookie token exists
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -26,16 +25,18 @@ export const AuthProvider = ({ children }) => {
     fetchProfile();
   }, []);
 
-  // ✅ Logout function
-  const logout = async () => {
+  // ✅ Centralized logout
+  const logout = async (navigate) => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {}, {
+      await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout`, {
         withCredentials: true,
       });
       setUser(null);
-      toast.success('Logged out successfully');
+      localStorage.removeItem('user');
+      toast.success('Logout successful!');
+      if (navigate) navigate('/login');
     } catch (err) {
-      toast.error('Logout failed');
+      toast.error('Logout failed!');
       console.error('Logout error:', err);
     }
   };
@@ -48,6 +49,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
-export const useLoading = () => useContext(AuthContext);
-export const useLogout = () => useContext(AuthContext);

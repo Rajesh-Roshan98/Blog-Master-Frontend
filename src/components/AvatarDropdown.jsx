@@ -1,7 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import API_BASE_URL from '../utils/apiBase';
 import { toast } from 'react-toastify';
 import { LogOut, User, Settings } from 'lucide-react';
 
@@ -10,18 +8,16 @@ import { useLoading } from './LogoutButton';
 
 const AvatarDropdown = ({ user }) => {
   const [open, setOpen] = useState(false);
-  const { setLoading } = useLoading();
-  const { setUser } = useAuth();
+  const { logout } = useAuth(); // ✅ centralized logout
+  const { setLoading } = useLoading(); // optional loading context
   const navigate = useNavigate();
-  const location = useLocation(); // 🔥 route listener
+  const location = useLocation();
   const dropdownRef = useRef(null);
 
-  // 🔄 Close dropdown on route change
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -32,19 +28,11 @@ const AvatarDropdown = ({ user }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // ✅ Clean and reusable logout function
   const handleLogout = async () => {
     setLoading(true);
-    try {
-      await axios.get(`${API_BASE_URL}/api/auth/logout`, { withCredentials: true });
-      setUser(null);
-      localStorage.removeItem('user');
-      toast.success('Logout successful!');
-      navigate('/login', { replace: true });
-    } catch (err) {
-      toast.error('Logout failed!');
-    } finally {
-      setLoading(false);
-    }
+    await logout(navigate); // centralized function handles toast, state, and redirect
+    setLoading(false);
   };
 
   return (

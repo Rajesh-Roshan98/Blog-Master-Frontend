@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { Menu, User, Settings, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import AvatarDropdown from './AvatarDropdown';
 
 const HeaderBar = () => {
@@ -26,16 +26,13 @@ const HeaderBar = () => {
     };
   }, [sidebarOpen]);
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = () => {
+    logout(navigate); // ✔ now handled by context
     setSidebarOpen(false);
-    navigate('/login');
   };
-
 
   return (
     <div className="absolute top-4 left-0 right-0 px-6 flex justify-between items-center z-20">
-      {/* Back Button - Desktop Only */}
       <button
         onClick={() => navigate(-1)}
         className="text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 border-2 rounded-4xl shadow hidden sm:inline"
@@ -43,7 +40,6 @@ const HeaderBar = () => {
         ← Back
       </button>
 
-      {/* Hamburger Menu - Mobile Only */}
       <div className="sm:hidden relative">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -54,17 +50,14 @@ const HeaderBar = () => {
         </button>
       </div>
 
-      {/* Avatar Dropdown - Desktop Only */}
       <div className="hidden sm:block">
         {user && <AvatarDropdown user={user} />}
       </div>
 
-      {/* Dark Overlay when sidebar is open */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/10 sm:hidden" />
       )}
 
-      {/* Sidebar Panel - Mobile Only */}
       <div
         ref={sidebarRef}
         className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg border-r z-50 transform transition-transform duration-300 sm:hidden ${
