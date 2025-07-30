@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { LogOut, User, Settings } from 'lucide-react';
 
 import { useAuth } from '../context/AuthContext';
-import { useLoading } from './LogoutButton';
 import { useLoading } from '../context/LoadingContext';
 
 
